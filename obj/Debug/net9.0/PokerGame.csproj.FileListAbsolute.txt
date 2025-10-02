@@ -1,0 +1,14 @@
+E:\code\Mypokergame\PokerGame\obj\Debug\net9.0\PokerGame.GeneratedMSBuildEditorConfig.editorconfig
+E:\code\Mypokergame\PokerGame\obj\Debug\net9.0\PokerGame.AssemblyInfoInputs.cache
+E:\code\Mypokergame\PokerGame\obj\Debug\net9.0\PokerGame.AssemblyInfo.cs
+E:\code\Mypokergame\PokerGame\obj\Debug\net9.0\PokerGame.csproj.CoreCompileInputs.cache
+E:\code\Mypokergame\PokerGame\bin\Debug\net9.0\PokerGame.exe
+E:\code\Mypokergame\PokerGame\bin\Debug\net9.0\PokerGame.deps.json
+E:\code\Mypokergame\PokerGame\bin\Debug\net9.0\PokerGame.runtimeconfig.json
+E:\code\Mypokergame\PokerGame\bin\Debug\net9.0\PokerGame.dll
+E:\code\Mypokergame\PokerGame\bin\Debug\net9.0\PokerGame.pdb
+E:\code\Mypokergame\PokerGame\obj\Debug\net9.0\PokerGame.dll
+E:\code\Mypokergame\PokerGame\obj\Debug\net9.0\refint\PokerGame.dll
+E:\code\Mypokergame\PokerGame\obj\Debug\net9.0\PokerGame.pdb
+E:\code\Mypokergame\PokerGame\obj\Debug\net9.0\PokerGame.genruntimeconfig.cache
+E:\code\Mypokergame\PokerGame\obj\Debug\net9.0\ref\PokerGame.dll
