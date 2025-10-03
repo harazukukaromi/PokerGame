@@ -1,4 +1,5 @@
 namespace PokerGame;
+
 public class Table : ITable
 {
     public List<IPlayer> players { get; } = new();
