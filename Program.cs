@@ -1,4 +1,6 @@
-﻿class Program
+﻿namespace PokerGame;
+
+class Program
 {
     static void Main(string[] args)
     {

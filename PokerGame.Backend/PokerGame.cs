@@ -1,139 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
-//Interface
-public interface ICard
-{
-    Suit Suit { get; }
-    Rank Rank { get; }
-}
-public interface IChip
-{
-    ChipType Type { get; }
-}
 
-public interface IDeck
-{
-    List<ICard> Cards { get; }
-    int CardsRemaining { get; }
-    void Initialize();
-    void Shuffle(Random rng);
-}
-public interface IHand
-{
-    List<ICard> Cards { get; }
-}
-public interface IPlayer
-{
-    string Name { get; }
-    IHand Hand { get; }
-    List<Chip> Chips { get; }
-    bool IsFolded { get; set; }
-    int CurrentBet { get; set; }
-    int Balance { get; set; }
-    int TotalContributed { get; set; }
-}
-
-public interface ITable
-{
-    List<IPlayer> players { get; }
-    IDeck Deck { get; }
-    List<Chip> Pot { get; }
-}
-
-public class Card : ICard
-{
-    public Suit Suit { get; }
-    public Rank Rank { get; }
-    public Card(Suit suit, Rank rank)
-    {
-        Suit = suit;
-        Rank = rank;
-    }
-}
-public class Deck : IDeck
-{
-    private List<ICard> _cards = new();
-    public List<ICard> Cards => _cards;
-    public int CardsRemaining => _cards.Count;
-
-     public void Initialize()
-    {
-        _cards.Clear();
-        foreach (Suit s in Enum.GetValues(typeof(Suit)))
-            foreach (Rank r in Enum.GetValues(typeof(Rank)))
-                _cards.Add(new Card(s, r));
-    }
-
-    public void Shuffle(Random rng)
-    {
-        int n = _cards.Count;
-        while (n > 1)
-        {
-            n--;
-            int k = rng.Next(n + 1);
-            (_cards[k], _cards[n]) = (_cards[n], _cards[k]);
-        }
-    }
-}
-public class Hand : IHand
-{
-    private List<ICard> _cards = new();
-    public List<ICard> Cards => _cards;
-
-    public void AddCard(ICard card) => _cards.Add(card);
-}
-
-public class Chip : IChip
-{
-    public ChipType Type { get; }
-    public Chip(ChipType type) => Type = type;
-}
-
-public class HumanPlayer : IPlayer
-{
-    public string Name { get; }
-    public IHand Hand { get; } = new Hand();
-    public List<Chip> Chips { get; } = new();
-    public bool IsFolded { get; set; }
-    public int CurrentBet { get; set; }
-    public int Balance { get; set; }
-    public int TotalContributed { get; set; }
-
-    public HumanPlayer(string name, int initialChips = 1000)
-    {
-        Name = name;
-        Balance = initialChips;
-    }
-}
-public class AIPlayer : IPlayer
-{
-    public string Name { get; }
-    public IHand Hand { get; } = new Hand();
-    public List<Chip> Chips { get; } = new();
-    public bool IsFolded { get; set; }
-    public int CurrentBet { get; set; }
-    public int Balance { get; set; }
-    public int TotalContributed { get; set; }   
-
-    public AIPlayer(string name, int initialChips = 1000)
-    {
-        Name = name;
-        Balance = initialChips;
-    }
-}
-
-public class Table : ITable
-{
-    public List<IPlayer> players { get; } = new();
-    public IDeck Deck { get; }
-    public List<Chip> Pot { get; } = new();
-
-    public Table(IDeck deck)
-    {
-        Deck = deck ?? throw new ArgumentNullException(nameof(deck));
-    }
-}
+namespace PokerGame;
 public class PokerGame
 {
     private readonly ITable _table;
@@ -144,6 +13,9 @@ public class PokerGame
     private int _bigBlind;
     private int _smallBlindIndex;
     private int _bigBlindIndex;
+    private int _totalPot = 0; // total uang yang dipertaruhkan di ronde ini
+
+
 
     private readonly List<IPlayer> _players = new();
 
@@ -226,9 +98,6 @@ public class PokerGame
 
         PlayRound();
     }
-
-
-
 
     private void RotateBlinds()
     {
@@ -352,19 +221,6 @@ public class PokerGame
             EndRound();
         }
     }
-    
-    private void ResetRound()
-    {
-        _communityCards.Clear();
-        _currentBet = 0;
-        foreach (var p in _players)
-        {
-            p.IsFolded = false;
-            p.CurrentBet = 0;
-            p.Hand.Cards.Clear();
-        }
-        Console.WriteLine("Round baru dimulai.");
-    }
 
     private void ResetForNewStage()
     {
@@ -377,22 +233,25 @@ public class PokerGame
 
     private void EndRound()
     {
-        //Console.WriteLine("\n=== Ronde selesai ===");
-        OnGameEvent?.Invoke(GameEventType.RoundEnded, null); // <-- trigger event
-        // reset pot
+        OnGameEvent?.Invoke(GameEventType.RoundEnded, null);
+
+        // reset pot chips (fisik), tapi simpan _totalPot dulu
         _table.Pot.Clear();
 
-        // eliminasi pemain bangkrut setelah showdown & distribusi pot
+        // eliminasi pemain bangkrut
         var eliminated = _players
-        .Where(p => p.Balance <= 0 || p.Balance < (int)ChipType.White) // 💡 White = 10
-        .ToList();
+            .Where(p => p.Balance <= 0 || p.Balance < (int)ChipType.White)
+            .ToList();
         foreach (var p in eliminated)
             RemovePlayer(p);
 
-        // tampilkan state meja
+        // ✅ tampilkan state (masih pakai _totalPot ronde ini)
         ShowTableState();
 
-        // ✅ tanya ke player apakah lanjut
+        // baru reset _totalPot setelah tampilkan
+        _totalPot = 0;
+
+        // tanya player
         string choice;
         while (true)
         {
@@ -408,6 +267,7 @@ public class PokerGame
             Environment.Exit(0);
         }
     }
+
     private void DistributePot()
     {
         // Ambil semua pemain yang masih aktif
@@ -593,7 +453,6 @@ public class PokerGame
         // tetap set currentBet = _bigBlind supaya call minimum tidak turun
         _currentBet = _bigBlind;
     }
-
 
     private bool BettingRounds()
     {
@@ -907,8 +766,6 @@ public class PokerGame
         }
     }
 
-
-
    public class HandResult
     {
         public string Name { get; set; } = "High Card";
@@ -1198,14 +1055,11 @@ public class PokerGame
             Environment.Exit(0);
         }
     }
-
-    public List<IPlayer> GetPlayers() => _table.players;
-    public void AddCard(ICard card) => _communityCards.Add(card);
-    public void ClearCard() => _communityCards.Clear();
     private void ResetForNewRound()
     {
         _communityCards.Clear();
         _currentBet = 0;
+        _totalPot = 0;
 
         foreach (var p in _players)
         {
@@ -1221,7 +1075,7 @@ public class PokerGame
         //Console.WriteLine("Round baru dimulai.");
         OnGameEvent?.Invoke(GameEventType.RoundStart, null); // <-- trigger event
     }
-    public bool PlaceBet(int amount)
+    public bool PlaceTotalBet(int amount)
     {
         if (amount < _currentBet) return false;
         _currentBet = amount;
@@ -1259,6 +1113,8 @@ public class PokerGame
     public void AddToPot(int amount)
     {
         if (amount <= 0) return;
+
+        _totalPot += amount;
 
         var chips = new List<Chip>();
         int remaining = amount;
@@ -1432,8 +1288,8 @@ public class PokerGame
         }
     }
 
-    private int GetPotValue() =>
-        _table.Pot.Sum(c => (int)c.Type);
+    private int GetPotValue() => _totalPot;
+
 
     private void SplitPotEvenlyAmong(List<IPlayer> winners)
     {
@@ -1584,10 +1440,10 @@ public class PokerGame
         Console.WriteLine("Players:");
         foreach (var p in _players)
         {
-            string chipText = FormatChips(p.Balance); // gunakan formatter chips
+            string chipText = FormatChips(p.Balance);
             Console.WriteLine($"- {p.Name} | Chips: {chipText} | Folded: {p.IsFolded}");
         }
-        Console.WriteLine($"Pot value: {FormatChips(GetPotValue())}");
+        Console.WriteLine($"Pot value: {FormatChips(_totalPot)}"); // gunakan total pot
         ShowBoard();
         Console.WriteLine("===================\n");
     }

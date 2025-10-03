@@ -1,3 +1,4 @@
+namespace PokerGame;
 public enum Rank
 {
     Two = 2,
