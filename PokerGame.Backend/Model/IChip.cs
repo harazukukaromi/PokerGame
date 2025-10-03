@@ -1,5 +1,15 @@
-namespace PokerGame;
-public interface IChip
+namespace PokerGame.Backend.Interfaces
 {
-    ChipType Type { get; }
+    public enum ChipType
+    {
+        White = 10,
+        Red = 50,
+        Green = 100,
+        Black = 1000
+    }
+
+    public interface IChip
+    {
+        ChipType Type { get; }
+    }
 }

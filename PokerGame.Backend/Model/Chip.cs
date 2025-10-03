@@ -1,7 +1,10 @@
-namespace PokerGame;
+using PokerGame.Backend.Interfaces;
 
-public class Chip : IChip
+namespace PokerGame.Backend.Models
 {
-    public ChipType Type { get; }
-    public Chip(ChipType type) => Type = type;
+    public class Chip : IChip
+    {
+        public ChipType Type { get; }
+        public Chip(ChipType type) => Type = type;
+    }
 }

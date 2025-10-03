@@ -1,8 +1,12 @@
-namespace PokerGame;
-public class Hand : IHand
-{
-    private List<ICard> _cards = new();
-    public List<ICard> Cards => _cards;
+using System.Collections.Generic;
+using PokerGame.Backend.Interfaces;
 
-    public void AddCard(ICard card) => _cards.Add(card);
+namespace PokerGame.Backend.Models
+{
+    public class Hand : IHand
+    {
+        private List<ICard> _cards = new();
+        public List<ICard> Cards => _cards;
+        public void AddCard(ICard card) => _cards.Add(card);
+    }
 }

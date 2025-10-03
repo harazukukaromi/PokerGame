@@ -1,8 +1,12 @@
-namespace PokerGame;
-public interface IDeck
+using System.Collections.Generic;
+
+namespace PokerGame.Backend.Interfaces
 {
-    List<ICard> Cards { get; }
-    int CardsRemaining { get; }
-    void Initialize();
-    void Shuffle(Random rng);
+    public interface IDeck
+    {
+        List<ICard> Cards { get; }
+        int CardsRemaining { get; }
+        void Initialize();
+        void Shuffle(System.Random rng);
+    }
 }

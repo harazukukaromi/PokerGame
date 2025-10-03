@@ -1,9 +1,11 @@
-namespace PokerGame;
-public interface ITable
+using System.Collections.Generic;
+
+namespace PokerGame.Backend.Interfaces
 {
-    List<IPlayer> players { get; }
-    IDeck Deck { get; }
-    List<Chip> Pot { get; }
+    public interface ITable
+    {
+        List<IPlayer> players { get; }
+        IDeck Deck { get; }
+        List<IChip> Pot { get; }   //pakai interface IChip, bukan Chip langsung
+    }
 }
-
-

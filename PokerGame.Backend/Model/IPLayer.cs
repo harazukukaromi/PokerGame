@@ -1,11 +1,15 @@
-namespace PokerGame;
-public interface IPlayer
+using System.Collections.Generic;
+
+namespace PokerGame.Backend.Interfaces
 {
-    string Name { get; }
-    IHand Hand { get; }
-    List<Chip> Chips { get; }
-    bool IsFolded { get; set; }
-    int CurrentBet { get; set; }
-    int Balance { get; set; }
-    int TotalContributed { get; set; }
+    public interface IPlayer
+    {
+        string Name { get; }
+        IHand Hand { get; }
+        List<IChip> Chips { get; }   // ganti Chip -> IChip
+        bool IsFolded { get; set; }
+        int CurrentBet { get; set; }
+        int Balance { get; set; }
+        int TotalContributed { get; set; }
+    }
 }

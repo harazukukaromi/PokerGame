@@ -1,13 +1,18 @@
-namespace PokerGame;
+using System;
+using System.Collections.Generic;
+using PokerGame.Backend.Interfaces;
 
-public class Table : ITable
+namespace PokerGame.Backend.Models
 {
-    public List<IPlayer> players { get; } = new();
-    public IDeck Deck { get; }
-    public List<Chip> Pot { get; } = new();
-
-    public Table(IDeck deck)
+    public class Table : ITable
     {
-        Deck = deck ?? throw new ArgumentNullException(nameof(deck));
+        public List<IPlayer> players { get; } = new();
+        public IDeck Deck { get; }
+        public List<IChip> Pot { get; } = new List<IChip>();
+
+        public Table(IDeck deck)
+        {
+            Deck = deck ?? throw new ArgumentNullException(nameof(deck));
+        }
     }
 }

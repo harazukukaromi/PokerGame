@@ -1,5 +1,9 @@
-namespace PokerGame;
-public interface IHand
+using System.Collections.Generic;
+
+namespace PokerGame.Backend.Interfaces
 {
-    List<ICard> Cards { get; }
+    public interface IHand
+    {
+        List<ICard> Cards { get; }
+    }
 }

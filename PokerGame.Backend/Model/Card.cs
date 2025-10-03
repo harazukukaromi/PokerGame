@@ -1,12 +1,16 @@
-namespace PokerGame;
+using PokerGame.Backend.Interfaces;
 
-public class Card : ICard
+namespace PokerGame.Backend.Models
 {
-    public Suit Suit { get; }
-    public Rank Rank { get; }
-    public Card(Suit suit, Rank rank)
+    public class Card : ICard
     {
-        Suit = suit;
-        Rank = rank;
+        public Suit Suit { get; }
+        public Rank Rank { get; }
+        public Card(Suit suit, Rank rank)
+        {
+            Suit = suit;
+            Rank = rank;
+        }
+        public override string ToString() => $"{Rank} of {Suit}";
     }
 }
